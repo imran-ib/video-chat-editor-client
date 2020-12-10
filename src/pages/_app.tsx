@@ -1,15 +1,6 @@
-import { AppProps } from 'next/app';
-import { ApolloProvider } from '@apollo/client';
-
-import './_app.scss';
-
-import i18n, { initialI18nSettings, Language } from '../lib/i18n';
-import { useApollo } from '../lib/apollo';
-
-i18n.init({
-  ...initialI18nSettings,
-  lng: Language.EN,
-});
+import { AppProps } from "next/app";
+import { ApolloProvider } from "@apollo/client";
+import { useApollo } from "../lib/apollo";
 
 const App = ({ Component, pageProps }: AppProps) => {
   const apolloClient = useApollo(pageProps);

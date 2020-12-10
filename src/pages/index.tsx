@@ -1,17 +1,11 @@
-import { NextPage } from 'next';
-import { useTranslation } from 'react-i18next';
-import { useApolloClient } from '@apollo/client';
+import { NextPage } from "next";
+import Layout from "../components/Layout/Layout";
 
 const IndexPage: NextPage = () => {
-  const [t] = useTranslation('common');
-  const apolloClient = useApolloClient();
-
   return (
-    <div
-      dangerouslySetInnerHTML={{
-        __html: t('greetings', { version: apolloClient.version }),
-      }}
-    />
+    <Layout title="My app 🔥 ">
+      <h1>Home</h1>
+    </Layout>
   );
 };
 
