@@ -48,8 +48,8 @@ export const GlobalStyles: GlobalStyleComponent<
 }
  body {
       overflow-x: hidden !important;
-      background-color:#292F3F;
-      color:#828282;
+      /* background-color:#292F3F;
+      color:#828282; */
       font-size: 1.6rem;
       
        /* Scroll bar */

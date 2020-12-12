@@ -1,6 +1,7 @@
 import React from "react";
 import { GlobalStyles } from "../styles/Global";
 import Meta from "./Meta";
+import LayoutComponent from "./index";
 
 interface Props {
   children: React.ReactNode;
@@ -11,7 +12,9 @@ const Layout: React.FC<Props> = ({ children, title }) => {
   return (
     <>
       <Meta title={title} />
-      <GlobalStyles /> {children}
+      <GlobalStyles />
+      <LayoutComponent />
+      {children}
     </>
   );
 };
