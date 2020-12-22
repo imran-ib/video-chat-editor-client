@@ -1,22 +1,22 @@
-import { useMemo } from 'react';
-import merge from 'deepmerge';
-import cookie from 'cookie';
-import type { GetServerSidePropsContext } from 'next';
-import type { IncomingMessage } from 'http';
-import type { NormalizedCacheObject } from '@apollo/client';
-import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
-import { setContext } from '@apollo/client/link/context';
+import { useMemo } from "react";
+import merge from "deepmerge";
+import cookie from "cookie";
+import type { GetServerSidePropsContext } from "next";
+import type { IncomingMessage } from "http";
+import type { NormalizedCacheObject } from "@apollo/client";
+import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client";
+import { setContext } from "@apollo/client/link/context";
 
 interface PageProps {
   props?: Record<string, any>;
 }
 
-export const APOLLO_STATE_PROPERTY_NAME = '__APOLLO_STATE__';
-export const COOKIES_TOKEN_NAME = 'jwt';
+export const APOLLO_STATE_PROPERTY_NAME = "__APOLLO_STATE__";
+export const COOKIES_TOKEN_NAME = "token";
 
 const getToken = (req?: IncomingMessage) => {
   const parsedCookie = cookie.parse(
-    req ? req.headers.cookie ?? '' : document.cookie,
+    req ? req.headers.cookie ?? "" : document.cookie
   );
 
   return parsedCookie[COOKIES_TOKEN_NAME];
@@ -25,25 +25,30 @@ const getToken = (req?: IncomingMessage) => {
 let apolloClient: ApolloClient<NormalizedCacheObject> = null;
 
 const createApolloClient = (ctx?: GetServerSidePropsContext) => {
+  let token: string;
   const httpLink = new HttpLink({
     uri: process.env.NEXT_PUBLIC_GRAPHQL_URI,
-    credentials: 'same-origin',
+    // by changing this to 'include' instead of 'same-origin'  and pass cors object in backend we are able to save cookie in browser
+    // if you want to send token in headers then pass `same-origin`
+    credentials: "include",
   });
 
   const authLink = setContext((_, { headers }) => {
     // Get the authentication token from cookies
-    const token = getToken(ctx?.req);
-
+    if (typeof window !== "undefined") {
+      token = localStorage.getItem("token");
+    }
     return {
+      // cookie: ctx.req.headers.cookie,
       headers: {
         ...headers,
-        authorization: token ? `Bearer ${token}` : '',
+        authorization: token ? `Bearer ${token}` : "",
       },
     };
   });
 
   return new ApolloClient({
-    ssrMode: typeof window === 'undefined',
+    ssrMode: typeof window === "undefined",
     link: authLink.concat(httpLink),
     cache: new InMemoryCache(),
   });
@@ -67,7 +72,7 @@ export function initializeApollo(initialState = null, ctx = null) {
   }
 
   // For SSG and SSR always create a new Apollo Client
-  if (typeof window === 'undefined') {
+  if (typeof window === "undefined") {
     return client;
   }
 
@@ -81,7 +86,7 @@ export function initializeApollo(initialState = null, ctx = null) {
 
 export function addApolloState(
   client: ApolloClient<NormalizedCacheObject>,
-  pageProps: PageProps,
+  pageProps: PageProps
 ) {
   if (pageProps?.props) {
     pageProps.props[APOLLO_STATE_PROPERTY_NAME] = client.cache.extract();

@@ -11,12 +11,16 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "release": "standard-version"
+    "release": "standard-version",
+    "generate": "graphql-codegen"
   },
   "dependencies": {
     "@apollo/client": "3.3.3",
     "@types/cookie": "0.4.0",
     "@types/react": "17.0.0",
+    "@graphql-codegen/cli": "^1.17.8",
+    "@graphql-codegen/typescript-operations": "^1.17.8",
+    "@graphql-codegen/typescript-react-apollo": "^2.0.6",
     "antd": "^4.9.2",
     "apollo-link-context": "1.0.20",
     "babel-plugin-graphql-tag": "3.1.0",
